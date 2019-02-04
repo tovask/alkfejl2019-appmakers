@@ -1,6 +1,6 @@
 Csapatnév:
 
-Csapattagok (név, Neptun-kód):
+Csapattagok (név, Neptun-kód, e-mail cím):
 - 
 - 
 - 

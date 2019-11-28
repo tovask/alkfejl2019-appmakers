@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>MainForm.qml</file>
+        <file>HistoryGraph.qml</file>
+        <file>8-512 (1).png</file>
+        <file>8-512 (2).png</file>
+        <file>8-512 (3).png</file>
+        <file>8-512 (4).png</file>
+        <file>8-512 (5).png</file>
+        <file>8-512 (6).png</file>
+        <file>8-512 (7).png</file>
+        <file>8-512 (8).png</file>
+        <file>8-512 (9).png</file>
+        <file>8-512 (10).png</file>
+        <file>8-512 (11).png</file>
+        <file>8-512 (12).png</file>
+        <file>8-512 (13).png</file>
+        <file>8-512 (14).png</file>
+        <file>8-512 (15).png</file>
+        <file>8-512 (16).png</file>
+        <file>8-512 (17).png</file>
+        <file>8-512 (18).png</file>
+        <file>8-512 (19).png</file>
+        <file>8-512 (20).png</file>
+        <file>8-512 (21).png</file>
+        <file>8-512 (22).png</file>
+        <file>8-512 (23).png</file>
+        <file>8-512 (24).png</file>
+    </qresource>
+</RCC>

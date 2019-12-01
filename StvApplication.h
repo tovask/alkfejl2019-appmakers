@@ -18,7 +18,7 @@ class StvApplication : public QApplication
 {
 public:
     /** Konstruktor. Alapvető példányosítások és signal bekötések. */
-    StvApplication(int argc, char *argv[]);
+    StvApplication(int &argc, char *argv[]);
     ~StvApplication() = default;
 
 private:

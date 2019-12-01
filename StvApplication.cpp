@@ -1,7 +1,7 @@
 #include "StvApplication.h"
 #include "Communication/CommunicationTcpSocketServer.h"
 
-StvApplication::StvApplication(int argc, char *argv[])
+StvApplication::StvApplication(int &argc, char *argv[])
     : QApplication(argc, argv), serverSocket(std::unique_ptr<CommunicationTcpSocketServer>(new CommunicationTcpSocketServer(3333))),
       simulator(serverSocket.get()), engine(), history(), communication(),
       robot(history, communication), handler(robot, *engine.rootContext(), history)

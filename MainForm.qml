@@ -15,7 +15,6 @@ Item {
     signal selfTestCommand;
     signal carHeightCommand(real height);
 
-    // A parancs nyomógombok elemcsoportja
 
     Item {
         id: graphGB
@@ -69,6 +68,7 @@ Item {
         anchors.leftMargin: 10
         anchors.bottom: commandsGB.top
         anchors.bottomMargin: 10
+        width: parent.width/2
 
         ColumnLayout {
             // Felfelé, lefelé és balra a szülő széléhez illeszkedik. Jobbra nem, mert
@@ -201,55 +201,62 @@ Item {
             }
         }
 
-        ColumnLayout {
-            id: heightSlider
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
+        GroupBox {
+            id: heightSliderGB
             anchors.left: commandButtons.right
-            anchors.leftMargin: 20
+            anchors.leftMargin: 10
+            anchors.bottom: parent.bottom
+            title: " " // ez kell placeholdernek, hogy ne lógjon ki a tartalom
 
-            Text {
-                id: heightSliderText
-                text: "Magasság:"
-                font.pixelSize: 12
-            }
-
-            Slider{
-                id: ySlider
-                anchors.rightMargin: 0
-                anchors.right: parent.right
-                anchors.left: parent.left
-                anchors.leftMargin: 0
-                minimumValue: 1
-                maximumValue: 24
-                visible: true
-                value: 12
-                onValueChanged: {
-                    carHeightCommand(value)
-                }
-            }
-
-
-            RowLayout {
-                id: heightLabels
-                height: 100
-                anchors.right: parent.right
-                anchors.rightMargin: 0
+            ColumnLayout {
+                id: heightSlider
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 0
                 anchors.left: parent.left
                 anchors.leftMargin: 0
 
-                Label {
-                    id: heightLabelslabelLow
-                    text: qsTr("Alacsony")
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
+                Text {
+                    id: heightSliderText
+                    text: "Magasság:"
+                    font.pixelSize: 12
                 }
 
-                Label {
-                    id: heightLabelslabelHight
-                    text: qsTr("Magas")
+                Slider{
+                    id: ySlider
                     anchors.rightMargin: 0
                     anchors.right: parent.right
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+                    minimumValue: 1
+                    maximumValue: 24
+                    visible: true
+                    value: 12
+                    onValueChanged: {
+                        carHeightCommand(value)
+                    }
+                }
+
+
+                RowLayout {
+                    id: heightLabels
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.left: parent.left
+                    anchors.leftMargin: 0
+
+                    Label {
+                        id: heightLabelslabelLow
+                        text: qsTr("Alacsony")
+                        anchors.left: parent.left
+                        anchors.leftMargin: 0
+                    }
+
+                    Label {
+                        id: heightLabelslabelHight
+                        text: qsTr("Magas")
+                        anchors.rightMargin: 0
+                        anchors.right: parent.right
+                    }
                 }
             }
 

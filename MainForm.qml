@@ -17,18 +17,17 @@ Item {
 
     // A parancs nyomógombok elemcsoportja
 
-    GroupBox {
+    Item {
         id: graphGB
-        title: qsTr("Grafikon")
         // Két oldalra kitölti a szülőt, felfele a szülőhoz illeszkedik, lefele a currentValuesGB-hez.
         anchors.right: parent.right
-        anchors.rightMargin: 0
+        anchors.rightMargin: 10
         anchors.left: parent.left
-        anchors.leftMargin: 0
+        anchors.leftMargin: 10
         anchors.top: parent.top
-        anchors.topMargin: 0
+        anchors.topMargin: 10
         anchors.bottom: currentValuesGB.top
-        anchors.bottomMargin: 0
+        anchors.bottomMargin: 20
         // Felfelé a commandsGB és currentValuesGB GroupBoxok közül ahhoz igazodik, aminek lejjebb van az alja.
         // anchors.top: (commandsGB.bottom > currentValuesGB.bottom ? commandsGB.bottom : currentValuesGB.bottom )
         // anchors.topMargin: 0
@@ -67,11 +66,9 @@ Item {
         title: "Pillanatnyi értékek"
         // Balra illeszkedik a szülőhöz, lent a commandsGB-hez. Szélessége és magassága fix.
         anchors.left: parent.left
-        anchors.leftMargin: 0
+        anchors.leftMargin: 10
         anchors.bottom: commandsGB.top
-        anchors.bottomMargin: 0
-        width: 200
-        height: 150
+        anchors.bottomMargin: 10
 
         ColumnLayout {
             // Felfelé, lefelé és balra a szülő széléhez illeszkedik. Jobbra nem, mert
@@ -83,12 +80,12 @@ Item {
             //  értékétől függ. (Ha az értéke null, akkor "?" jelenik meg.)
             // A currentState-et a MainWindowsEventHandling::historyChanged metódus regisztrálja be, hogy
             //  látható legyen a QML oldalról is. (Hivatkozás a RobotStateHistory::currentState-re.)
-            Text { text: " Állapot: " + (currentState!=null ? currentState.statusName : "?") }
-            Text { text: " Idő: " + (currentState!=null ? currentState.timestamp : "?") }
-            Text { text: " X: " + (currentState!=null ? currentState.x.toFixed(3) : "?") }
-            Text { text: " V: " + (currentState!=null ? currentState.v.toFixed(3) : "?") }
-            Text { text: " A: " + (currentState!=null ? currentState.a.toFixed(3) : "?") }
-            Text { text: " Lámpa: " + (currentState!=null ? currentState.light.toString() : "?") }
+            Text { text: " Állapot:\t" + (currentState!=null ? currentState.statusName : "?") }
+            Text { text: " Idő:\t" + (currentState!=null ? currentState.timestamp : "?") }
+            Text { text: " X:\t" + (currentState!=null ? currentState.x.toFixed(3) : "?") }
+            Text { text: " V:\t" + (currentState!=null ? currentState.v.toFixed(3) : "?") }
+            Text { text: " A:\t" + (currentState!=null ? currentState.a.toFixed(3) : "?") }
+            Text { text: " Lámpa:\t" + (currentState!=null ? currentState.light.toString() : "?") }
         }
 
     }
@@ -97,14 +94,14 @@ Item {
     GroupBox {
         id: logGB
         title: qsTr("Log")
-        anchors.top: graphGB.bottom
-        anchors.topMargin: 0
-        anchors.bottom: commandsGB.top
-        anchors.bottomMargin: 0
+        anchors.top: currentValuesGB.top
+        anchors.topMargin: currentValuesGB.topMargin
+        anchors.bottom: currentValuesGB.bottom
+        anchors.bottomMargin: currentValuesGB.bottomMargin
         anchors.left: currentValuesGB.right
-        anchors.leftMargin: 0
+        anchors.leftMargin: 20
         anchors.right: parent.right
-        anchors.rightMargin: 0
+        anchors.rightMargin: 10
 
         ScrollView {
             anchors.fill: parent
@@ -146,23 +143,20 @@ Item {
         height: 135
         // Két oldalon és lent követi a szülőt. A magassága fix.
         anchors.left : parent.left
-        anchors.leftMargin: 0
+        anchors.leftMargin: 10
         anchors.right: parent.right
-        anchors.rightMargin: 0
+        anchors.rightMargin: 10
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
+        anchors.bottomMargin: 10
         title: "Parancsok"
 
         // A nyomógombokat oszlopba rendezzük
         ColumnLayout {
             id: commandButtons
-            width: 100
-            anchors.leftMargin: 0
-            anchors.bottomMargin: 0
-            anchors.topMargin: 0
             anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
             anchors.left: parent.left
-            anchors.top: parent.top
+            anchors.leftMargin: 0
             // Az oszlop kitölti a szülőt, vagyis a commandsGB-t.
 
             // Reset nyomógomb. Oldal irányba kitöltik a szülőt, 0 pixel margó kihagyásával.
@@ -211,8 +205,6 @@ Item {
             id: heightSlider
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
-            anchors.right: parent.right
-            anchors.rightMargin: 0
             anchors.left: commandButtons.right
             anchors.leftMargin: 20
 
@@ -247,15 +239,15 @@ Item {
                 anchors.leftMargin: 0
 
                 Label {
-                    id: label1
-                    text: qsTr("Label")
+                    id: heightLabelslabelLow
+                    text: qsTr("Alacsony")
                     anchors.left: parent.left
                     anchors.leftMargin: 0
                 }
 
                 Label {
-                    id: label2
-                    text: qsTr("Label")
+                    id: heightLabelslabelHight
+                    text: qsTr("Magas")
                     anchors.rightMargin: 0
                     anchors.right: parent.right
                 }

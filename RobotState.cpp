@@ -9,8 +9,8 @@ RobotState::RobotState()
 }
 
 RobotState::RobotState(Status status, qint64 timestamp,
-    float x, float v, float a, qint8 light, qint32 height, qint32 prevHeight)
-    : _status(status), _timestamp(timestamp), _x(x), _v(v), _a(a), _light(light), _height(height), _prevHeight(prevHeight)
+    float x, float v, float a, qint8 light, qint32 height)
+    : _status(status), _timestamp(timestamp), _x(x), _v(v), _a(a), _light(light), _height(height)
 {
     initStatusNames();
 }
@@ -47,7 +47,6 @@ void RobotState::WriteTo(QDataStream& stream) const
     stream << _a;
     stream << _light;
     stream << _height;
-    stream << _prevHeight;
 }
 
 void RobotState::ReadFrom(QDataStream& stream)
@@ -61,7 +60,6 @@ void RobotState::ReadFrom(QDataStream& stream)
     stream >> _a;
     stream >> _light;
     stream >> _height;
-    stream >> _prevHeight;
 }
 
 
@@ -74,7 +72,6 @@ void RobotState::CopyFrom(const RobotState &other)
     _a = other._a;
     _light = other._light;
     _height = other._height;
-    _prevHeight = other._prevHeight;
 }
 
 QDataStream &operator<<(QDataStream& stream, const RobotState& state)

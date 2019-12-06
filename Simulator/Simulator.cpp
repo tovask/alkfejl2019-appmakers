@@ -28,6 +28,7 @@ void Simulator::reset(float intervalSec)
     state.setV(0.0F);
     state.setA(0.0F);
     state.setLight(0);
+    state.setHeight(12);
 }
 
 void Simulator::tick()
@@ -51,12 +52,6 @@ void Simulator::tick()
     // Magasabb szintű funkciók
     switch(state.status())
     {
-    case RobotState::Status::HeightAdjust:
-        if(state.height() != state.prevHeight()){
-            qDebug() << "Simulator: Adjusting height";
-            state.setPrevHeight(state.height());
-        }
-        break;
     case RobotState::Status::Default:
         break;
     case RobotState::Status::Reset:
@@ -101,6 +96,10 @@ void Simulator::tick()
         // Megjegyzés: a gyorsulás kért értékét már a parancs fogadásakor beállítottuk
         qDebug() << "HIBA: A szimulátor nem kerülhetne a Status::Accelerate állapotba.";
         break;
+    case RobotState::Status::HeightAdjust:
+        // Megjegyzés: a magasság kért értékét már a parancs fogadásakor beállítottuk
+        qDebug() << "HIBA: A szimulátor nem kerülhetne a Status::HeightAdjust állapotba.";
+        break;
     default:
         Q_UNREACHABLE();
     }
@@ -144,14 +143,14 @@ void Simulator::dataReady(QDataStream &inputStream)
         state.setStatus(RobotState::Status::Default);
         state.setA(receivedState.a());
         break;
-    case RobotState::Status::SelfTest:
-        qDebug() << "Simulator: Selftest";
-        state.setStatus(RobotState::Status::SelfTest);
-        break;
     case RobotState::Status::HeightAdjust:
         qDebug() << "Simulator: Height adjusting";
         state.setHeight(receivedState.height());
-        state.setStatus(RobotState::Status::HeightAdjust);
+        state.setStatus(RobotState::Status::Default);
+        break;
+    case RobotState::Status::SelfTest:
+        qDebug() << "Simulator: Selftest";
+        state.setStatus(RobotState::Status::SelfTest);
         break;
     default:
         Q_UNREACHABLE();

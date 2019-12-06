@@ -49,9 +49,10 @@ public:
      * @param v Sebesség
      * @param a Gyorsulás
      * @param light Robot lámpájának állapota
+     * @param height Magasság
      */
     RobotState(Status status, qint64 timestamp,
-        float x, float v, float a, qint8 light, qint32 _height, qint32 _prevHeight);
+        float x, float v, float a, qint8 light, qint32 height);
 
     ~RobotState() = default;
 
@@ -77,14 +78,6 @@ public:
     float v() const { return _v; }
     void setV(float v) { _v = v; }
 
-    Q_PROPERTY(qint32 height READ height WRITE setHeight MEMBER _height NOTIFY heightChanged)
-    qint32 height() const { return _height; }
-    void setHeight(qint32 height) { _height = height; }
-
-    Q_PROPERTY(qint32 prevHeight READ prevHeight WRITE setPrevHeight MEMBER _prevHeight NOTIFY prevHeightChanged)
-    qint32 prevHeight() const { return _prevHeight; }
-    void setPrevHeight(qint32 prevHeight) { _prevHeight = prevHeight; }
-
     /** Gyorsulás (m/s2) */
     Q_PROPERTY(float a READ a WRITE setA MEMBER _a NOTIFY aChanged)
     float a() const { return _a; }
@@ -94,6 +87,11 @@ public:
     Q_PROPERTY(bool light READ light WRITE setLight MEMBER _light NOTIFY lightChanged)
     float light() const { return _light; }
     void setLight(float light) { _light = light; }
+
+    /** Magasság (m) */
+    Q_PROPERTY(qint32 height READ height WRITE setHeight MEMBER _height NOTIFY heightChanged)
+    qint32 height() const { return _height; }
+    void setHeight(qint32 height) { _height = height; }
 
     /** Az aktuális állapot QStringként. */
     // In QML, it will be accessible as model.statusName
@@ -123,17 +121,15 @@ signals:
     void aChanged();
     void lightChanged();
     void heightChanged();
-    void prevHeightChanged();
 
 private:
     Status _status;
     qint64 _timestamp;
-    float _x;   /** Pozíció (m) */
-    float _v;   /** Sebesség (m/s) */
-    float _a;   /** Gyorsulás (m/s2) */
-    qint32 _height = 12; // magasság
-    qint32 _prevHeight = 12;
-    qint8 _light;
+    float _x;       /** Pozíció (m) */
+    float _v;       /** Sebesség (m/s) */
+    float _a;       /** Gyorsulás (m/s2) */
+    qint8 _light;   /** Lámpa (on/off) */
+    qint32 _height; /** Magasság (m) */
 
     /** Az állapotok és szöveges verziójuk közti megfeleltetés.
      * A getStatusName() használja. */

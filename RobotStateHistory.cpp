@@ -21,7 +21,8 @@ void RobotStateHistory::Add(const RobotState& state)
     //  nem támogatja a Qt metaobject rendszerét.)
     graphTimestamps.clear();
     graphVelocities.clear();
-    graphAcceleration.clear();
+    graphAccelerations.clear();
+    graphCarHeights.clear();
     int graphStateNumber = stateList.size() < shownStateNumber ? stateList.size() : shownStateNumber;
     auto it = container.end()-graphStateNumber;
     for(;it!=container.end();++it)
@@ -29,8 +30,8 @@ void RobotStateHistory::Add(const RobotState& state)
         RobotState *currentState = it->get();
         graphTimestamps.append(currentState->timestamp());
         graphVelocities.append(currentState->v());
-        graphAcceleration.append(currentState->a());
-        carHeight = currentState->height();
+        graphAccelerations.append(currentState->a());
+        graphCarHeights.append(currentState->height());
     }
 
     // Jelezzük a history változását.

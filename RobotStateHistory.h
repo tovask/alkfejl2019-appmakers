@@ -46,12 +46,12 @@ public:
      */
     QList<int> graphTimestamps;
     QList<int> graphVelocities;
-    QList<int> graphAcceleration;
-    qint32 carHeight;
+    QList<int> graphAccelerations;
+    QList<int> graphCarHeights;
     /** @}*/
 
     /** A megjelenítendő állapotok száma. */
-    const int shownStateNumber = 20;
+    const int shownStateNumber = 200;
 
 signals:
     /** Add() után kiadott signal. */

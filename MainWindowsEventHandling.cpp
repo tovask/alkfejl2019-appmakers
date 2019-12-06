@@ -47,8 +47,8 @@ void MainWindowsEventHandling::historyChanged()
 
     qmlContext.setContextProperty(QStringLiteral("historyGraphTimestamps"), QVariant::fromValue(history.graphTimestamps));
     qmlContext.setContextProperty(QStringLiteral("historyGraphVelocity"), QVariant::fromValue(history.graphVelocities));
-    qmlContext.setContextProperty(QStringLiteral("historyGraphAcceleration"), QVariant::fromValue(history.graphAcceleration));
-    qmlContext.setContextProperty(QStringLiteral("historyCarHeight"), QVariant::fromValue(history.carHeight));
+    qmlContext.setContextProperty(QStringLiteral("historyGraphAcceleration"), QVariant::fromValue(history.graphAccelerations));
+    qmlContext.setContextProperty(QStringLiteral("historyCarHeight"), QVariant::fromValue(history.graphCarHeights));
 
 
 

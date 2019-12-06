@@ -46,7 +46,7 @@ Item {
             graphTimestamps: historyGraphTimestamps
             graphVelocities: historyGraphVelocity
             graphAccelerations: historyGraphAcceleration
-            carHeight: historyCarHeight
+            graphCarHeights: historyCarHeight
         }
     }
 

@@ -27,23 +27,14 @@ Item {
         anchors.topMargin: 10
         anchors.bottom: currentValuesGB.top
         anchors.bottomMargin: 20
-        // Felfelé a commandsGB és currentValuesGB GroupBoxok közül ahhoz igazodik, aminek lejjebb van az alja.
-        // anchors.top: (commandsGB.bottom > currentValuesGB.bottom ? commandsGB.bottom : currentValuesGB.bottom )
-        // anchors.topMargin: 0
 
         HistoryGraph {
             id: historyGraph
+            // Kitölti a szülőt
             anchors.fill: parent
             // Az objectName akkor jó, ha C++ oldalról kell megkeresnünk egy QML oldalon definiált
             //  objektumot a findChild metódus rekurzív hívásaival.
             objectName: "historyGraph"
-
-            // A RowLayout erre az elemre vonatkozó elhelyezés beállításai.
-            /*Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.minimumWidth: 200
-            Layout.preferredWidth: 400
-            Layout.minimumHeight: 150*/
 
             // Ezek pedig a HistoryGraph tulajdonságai, amiket majd ott definiálunk,
             //  itt pedig értéket adunk nekik. Az alábbi változókat (pl. historyGraphTimestamps)
@@ -109,12 +100,6 @@ Item {
             // Itt a ScrollViewon belül adjuk meg, hogy a RowLayoutban
             //  mik legyenek a rá (ScrollViewra) vonatkozó méret beállítások,
             //  mert ezeket a RowLayout kezeli ebben az esetben.
-            /*Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.minimumWidth: 250
-            Layout.preferredWidth: 250
-            Layout.maximumWidth: 300
-            Layout.minimumHeight: 150*/
 
             // Itt jön a tényleges lista.
             ListView {
@@ -140,8 +125,6 @@ Item {
 
     GroupBox {
         id: commandsGB
-        height: 135
-        // Két oldalon és lent követi a szülőt. A magassága fix.
         anchors.left : parent.left
         anchors.leftMargin: 10
         anchors.right: parent.right
@@ -150,70 +133,45 @@ Item {
         anchors.bottomMargin: 10
         title: "Parancsok"
 
-        // A nyomógombokat oszlopba rendezzük
-        ColumnLayout {
-            id: commandButtons
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            // Az oszlop kitölti a szülőt, vagyis a commandsGB-t.
+        RowLayout {
+            id: commandsRow
+            spacing: 30
+            anchors.left : parent.left
+            anchors.leftMargin: 5
+            anchors.right: parent.right
+            anchors.rightMargin: 5
 
-            // Reset nyomógomb. Oldal irányba kitöltik a szülőt, 0 pixel margó kihagyásával.
-            //  Megnyomása esetén (Button.Clicked signal) meghívja a resetCommand signalt. (Ez
-            //  a signal látható innen, mivel a Button egyik ősében definiáltuk.)
-            Button {
-                id: resetBtn
-                anchors.left: parent.left
-                anchors.right: parent.right
-                text: qsTr("Reset")
-                anchors.leftMargin: 0
-                anchors.rightMargin: 0
-                onClicked: resetCommand()
-            }
+            // A nyomógombokat oszlopba rendezzük
+            ColumnLayout {
+                id: commandButtons
 
-            Button {
-                id: accelerateBtn
-                anchors.left: parent.left
-                anchors.right: parent.right
-                text: qsTr("Gyorsítás")
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
-                onClicked: accelerateCommand()
-            }
-            Button {
-                id: stopBtn
-                anchors.left: parent.left
-                anchors.right: parent.right
-                text: qsTr("Stop")
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
-                onClicked: stopCommand()
-            }
-            Button {
-                id: selfTestBtn
-                anchors.left: parent.left
-                anchors.right: parent.right
-                text: qsTr("Self test")
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
-                onClicked: selfTestCommand()
-            }
-        }
+                // Reset nyomógomb. Oldal irányba kitöltik a szülőt, 0 pixel margó kihagyásával.
+                //  Megnyomása esetén (Button.Clicked signal) meghívja a resetCommand signalt. (Ez
+                //  a signal látható innen, mivel a Button egyik ősében definiáltuk.)
+                Button {
+                    id: resetBtn
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    text: qsTr("Reset")
+                    anchors.leftMargin: 0
+                    anchors.rightMargin: 0
+                    onClicked: resetCommand()
+                }
 
-        GroupBox {
-            id: heightSliderGB
-            anchors.left: commandButtons.right
-            anchors.leftMargin: 10
-            anchors.bottom: parent.bottom
-            title: " " // ez kell placeholdernek, hogy ne lógjon ki a tartalom
+                Button {
+                    id: accelerateBtn
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    text: qsTr("Gyorsítás")
+                    anchors.rightMargin: 0
+                    anchors.leftMargin: 0
+                    onClicked: accelerateCommand()
+                }
+            }
 
             ColumnLayout {
                 id: heightSlider
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 0
-                anchors.left: parent.left
-                anchors.leftMargin: 0
+                Layout.fillWidth: true
 
                 Text {
                     id: heightSliderText
@@ -223,10 +181,7 @@ Item {
 
                 Slider{
                     id: ySlider
-                    anchors.rightMargin: 0
-                    anchors.right: parent.right
-                    anchors.left: parent.left
-                    anchors.leftMargin: 0
+                    Layout.fillWidth: true
                     minimumValue: 1
                     maximumValue: 24
                     visible: true
@@ -260,6 +215,29 @@ Item {
                 }
             }
 
+            // A nyomógombokat oszlopba rendezzük
+            ColumnLayout {
+                id: commandButtons2
+
+                Button {
+                    id: stopBtn
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    text: qsTr("Stop")
+                    anchors.rightMargin: 0
+                    anchors.leftMargin: 0
+                    onClicked: stopCommand()
+                }
+                Button {
+                    id: selfTestBtn
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    text: qsTr("Self test")
+                    anchors.rightMargin: 0
+                    anchors.leftMargin: 0
+                    onClicked: selfTestCommand()
+                }
+            }
         }
     }
 

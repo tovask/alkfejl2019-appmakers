@@ -47,7 +47,6 @@ public:
      * @param timestamp Időbélyeg
      * @param x Pozíció
      * @param v Sebesség
-     * @param a Gyorsulás
      * @param light Robot lámpájának állapota
      * @param height Magasság
      */
@@ -77,11 +76,6 @@ public:
     Q_PROPERTY(float v READ v WRITE setV MEMBER _v NOTIFY vChanged)
     float v() const { return _v; }
     void setV(float v) { _v = v; }
-
-    /** Gyorsulás (m/s2) */
-    Q_PROPERTY(float a READ a WRITE setA MEMBER _a NOTIFY aChanged)
-    float a() const { return _a; }
-    void setA(float a) { _a = a; }
 
     /** A robot lámpájának állapota. */
     Q_PROPERTY(bool light READ light WRITE setLight MEMBER _light NOTIFY lightChanged)
@@ -118,7 +112,6 @@ signals:
     void timestampChanged();
     void xChanged();
     void vChanged();
-    void aChanged();
     void lightChanged();
     void heightChanged();
 
@@ -127,7 +120,6 @@ private:
     qint64 _timestamp;
     float _x;       /** Pozíció (m) */
     float _v;       /** Sebesség (m/s) */
-    float _a;       /** Gyorsulás (m/s2) */
     qint8 _light;   /** Lámpa (on/off) */
     qint32 _height; /** Magasság (m) */
 

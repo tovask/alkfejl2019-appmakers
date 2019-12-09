@@ -48,6 +48,9 @@ protected:
     float dt;
     qint32 tempHeight = 0;
 
+    /** A timer aktuális tick ideje msben */
+    float currentTimerTickInterval = 1000.0F;
+
     /** A szimulátor pillanatnyi állapota. */
     RobotState state;
 

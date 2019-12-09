@@ -9,6 +9,7 @@ Simulator::Simulator(Communication *communication)
     connect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
     connect(&selfTestTimer, SIGNAL(timeout()), this, SLOT(selfTestTick()));
 
+
 }
 
 
@@ -17,7 +18,8 @@ void Simulator::start(float intervalSec)
     dt = intervalSec;
     state.setTimestamp(0);
     reset(intervalSec);
-    timer.start((long)(intervalSec*1000.0F));
+    timer.start(1000.0F);
+    state.setStatus(RobotState::Status::SelfTest);
 }
 
 void Simulator::reset(float intervalSec)
@@ -26,9 +28,9 @@ void Simulator::reset(float intervalSec)
     state.setStatus(RobotState::Status::Default);
     state.setX(0.0F);
     state.setV(0.0F);
-    state.setA(0.0F);
     state.setLight(0);
     state.setHeight(12);
+    timer.stop();
 }
 
 void Simulator::tick()
@@ -36,7 +38,7 @@ void Simulator::tick()
     // Fizikai szimuláció
     state.setTimestamp(state.timestamp() + dt);
     state.setX(state.x() + state.v()*dt);
-    state.setV(state.v() + state.a()*dt);
+    state.setV(state.v());
 
     if (state.v()<-10.0)
     {
@@ -67,34 +69,40 @@ void Simulator::tick()
         if (state.v() > 1.5F)
         {
             qDebug() << "Simulator: Stop parancs, gyors lassítás";
-            state.setA(-1.0F);
+            state.setV(state.v()-1.0F);
         }
         else if (state.v() > 0.1F)
         {
             qDebug() << "Simulator: Stop parancs, lassú lassítás";
-            state.setA(-0.05F);
+            state.setV(state.v()-0.5F);
         }
         else if (state.v() < -1.5F)
         {
             qDebug() << "Simulator: Stop parancs, gyorsítás előre";
-            state.setA(1.0F);
+            state.setV(state.v()+1.0F);
         }
         else if (state.v() < -0.1F)
         {
             qDebug() << "Simulator: Stop parancs, lassú gyorsítás előre";
-            state.setA(0.05F);
+            state.setV(state.v()+0.05F);
         }
         else
         {
             // Majdnem megállt
             qDebug() << "Simulator: Megállt.";
             state.setStatus(RobotState::Status::Default);
-            state.setA(0.0F);
+            state.setV(0.0F);
+            timer.stop();
         }
+        currentTimerTickInterval += 60;
+        timer.setInterval(currentTimerTickInterval);
         break;
     case RobotState::Status::Accelerate:
-        // Megjegyzés: a gyorsulás kért értékét már a parancs fogadásakor beállítottuk
-        qDebug() << "HIBA: A szimulátor nem kerülhetne a Status::Accelerate állapotba.";
+        qDebug() << "Simulator: Sebesség növelése.";
+        state.setStatus(RobotState::Status::Default);
+        state.setV(state.v()+1);
+        currentTimerTickInterval -= 60;
+        timer.setInterval(currentTimerTickInterval);
         break;
     case RobotState::Status::HeightAdjust:
         // Megjegyzés: a magasság kért értékét már a parancs fogadásakor beállítottuk
@@ -108,7 +116,6 @@ void Simulator::tick()
              << "): állapot=" << state.getStatusName()
              << ", x=" << state.x()
              << ", v=" << state.v()
-             << ", a=" << state.a()
              << ", lámpa:" << state.light()
              << ", magasság" << state.height();
 
@@ -138,11 +145,6 @@ void Simulator::dataReady(QDataStream &inputStream)
         qDebug() << "Simulator: Stop parancs.";
         state.setStatus(RobotState::Status::Stopping);
         break;
-    case RobotState::Status::Accelerate:
-        qDebug() << "Simulator: Gyorsítási parancs.";
-        state.setStatus(RobotState::Status::Default);
-        state.setA(receivedState.a());
-        break;
     case RobotState::Status::HeightAdjust:
         qDebug() << "Simulator: Height adjusting";
         state.setHeight(receivedState.height());
@@ -152,51 +154,55 @@ void Simulator::dataReady(QDataStream &inputStream)
         qDebug() << "Simulator: Selftest";
         state.setStatus(RobotState::Status::SelfTest);
         break;
+    case RobotState::Status::Accelerate:
+            qDebug() << "Simulator: Accelerate";
+            if(!timer.isActive()){
+                timer.start(currentTimerTickInterval);
+            }
+            state.setStatus(RobotState::Status::Accelerate);
+            break;
     default:
         Q_UNREACHABLE();
     }
 }
 
 void Simulator::startSelfTest(){
-    selfTestTimer.start((long)(1.0F*1000.0F));
+    state.setHeight(1);
+    selfTestTimer.start((long)(1000.0F));
 
 }
 
 void Simulator::selfTestTick(){
-    if(selfTestProcessCounter < 10){
-        qDebug() << "Simulator: Önteszt gyorsítás";
+    if(selfTestProcessCounter < 23){
+        qDebug() << "Simulator: Önteszt magasság emelés";
         state.setStatus(RobotState::Status::SelfTest);
         communication->send(state);
-        state.setA(1.0F);
+        state.setHeight(state.height()+1);
+        state.setV(state.v()+0.5);
+        selfTestTimer.setInterval(1000.0F-selfTestProcessCounter*20);
     }
-    else if (selfTestProcessCounter <= 20){
-        qDebug() << "Simulator: Önteszt lassítás";
+    else if (selfTestProcessCounter <= 47){
+        qDebug() << "Simulator: Önteszt magasság csökkentés";
         state.setStatus(RobotState::Status::SelfTest);
         communication->send(state);
-        if (state.v() > 1.5F)
-        {
-            qDebug() << "Simulator: Önteszt, gyors lassítás";
-            state.setA(-1.0F);
-        }
-        else if (state.v() > 0.1F)
-        {
-            qDebug() << "Simulator: Önteszt, lassú lassítás";
-            state.setA(-0.05F);
-        }
+        state.setHeight(state.height()-1);
+        state.setV(state.v()-0.5);
+        selfTestTimer.setInterval(520+selfTestProcessCounter*5);
+
+
     }
     else{
-        state.setA(0.0F);
+        state.setHeight(12);
         state.setStatus(RobotState::Status::Default);
         communication->send(state);
         qDebug() << "Simulator: Önteszt vége";
         selfTestTimer.stop();
 
-        timer.start(1.0F*1000.0F);
     }
     state.setLight( state.v()==10.0F ? 1.0F : 0.0F );
     state.setTimestamp(state.timestamp() + dt);
     state.setX(state.x() + state.v()*dt);
-    state.setV(state.v() + state.a()*dt);
+    state.setV(state.v());
     selfTestProcessCounter++;
 
 }

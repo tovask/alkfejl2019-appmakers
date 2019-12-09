@@ -30,7 +30,6 @@ void RobotStateHistory::Add(const RobotState& state)
         RobotState *currentState = it->get();
         graphTimestamps.append(currentState->timestamp());
         graphVelocities.append(currentState->v());
-        graphAccelerations.append(currentState->a());
         graphCarHeights.append(currentState->height());
     }
 

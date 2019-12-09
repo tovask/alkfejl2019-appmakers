@@ -75,7 +75,6 @@ Item {
             Text { text: " Idő:\t" + (currentState!=null ? currentState.timestamp : "?") }
             Text { text: " X:\t" + (currentState!=null ? currentState.x.toFixed(3) : "?") }
             Text { text: " V:\t" + (currentState!=null ? currentState.v.toFixed(3) : "?") }
-            Text { text: " A:\t" + (currentState!=null ? currentState.a.toFixed(3) : "?") }
             Text { text: " Lámpa:\t" + (currentState!=null ? currentState.light.toString() : "?") }
         }
 
@@ -254,7 +253,6 @@ Item {
             Text { text: model.statusName }
             Text { text: " X: " + model.x.toFixed(3) }
             Text { text: " V: " + model.v.toFixed(3) }
-            Text { text: " A: " + model.a.toFixed(3) }
             Text { text: " H: " + model.height }
         }
     }

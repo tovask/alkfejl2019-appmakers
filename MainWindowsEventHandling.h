@@ -54,6 +54,7 @@ public slots:
      * kiváltja a historyContextUpdated() signalt.
     */
     void historyChanged();
+    void heightChanged();
 
     void selfTestCommand();
     void carHeightCommand(int height);
@@ -63,6 +64,7 @@ signals:
      * Ilyenkor az érintett QML elemek (a grafikon) újrarajzolják magukat.
      */
     void historyContextUpdated();
+    void heightContexUpdated();
 
 private:
     /** A használt robot proxy. */

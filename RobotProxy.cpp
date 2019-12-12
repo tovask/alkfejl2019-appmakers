@@ -16,7 +16,15 @@ void RobotProxy::dataReady(QDataStream &stream)
     //  (Onnan vesszük majd azt is, hogy mi az aktuális állapot.)
     RobotState state;
     state.ReadFrom(stream);
-    history.Add(state);
+    if(state.onlyHeightAdjust() == true)
+    {
+        history.AddOnlyForHeight(state);
+    }
+    else
+    {
+        history.Add(state);
+
+    }
 }
 
 void RobotProxy::reset()

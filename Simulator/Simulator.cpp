@@ -19,6 +19,8 @@ void Simulator::start(float intervalSec)
     state.setTimestamp(0);
     reset(intervalSec);
     timer.start(1000.0F);
+    QList<double> resetPressures({4,4});
+    state.setPressures(resetPressures);
     state.setStatus(RobotState::Status::SelfTest);
 }
 
@@ -30,6 +32,8 @@ void Simulator::reset(float intervalSec)
     state.setV(0.0F);
     state.setLight(0);
     state.setHeight(12);
+    QList<double> resetPressures({4,4});
+    state.setPressures(resetPressures);
     timer.stop();
 }
 
@@ -49,7 +53,7 @@ void Simulator::tick()
         state.setV( 10.0F );
     }
 
-    state.setLight( state.v()==10.0F ? 1.0F : 0.0F );
+    state.setLight( state.v()>=10.0F ? 1.0F : 0.0F );
 
     // Magasabb szintű funkciók
     switch(state.status())
@@ -117,7 +121,9 @@ void Simulator::tick()
              << ", x=" << state.x()
              << ", v=" << state.v()
              << ", lámpa:" << state.light()
-             << ", magasság" << state.height();
+             << ", magasság" << state.height()
+             << ", első tengely nyomás: " << state.pressures().first()
+             << ", hátsó tengely nyomás: " << state.pressures().last();
 
     // Állapot küldése
     if (communication->isConnected())
@@ -128,10 +134,12 @@ void Simulator::tick()
 
 void Simulator::dataReady(QDataStream &inputStream)
 {
-
+    QList<double> newPressures;
     RobotState receivedState;
     receivedState.ReadFrom(inputStream);
-
+    if(receivedState.status() == RobotState::Status::HeightAdjust){
+        newPressures = {4* receivedState.height() * 0.083, 4 * receivedState.height() * 0.093};
+    }
     switch(receivedState.status())
     {
     case RobotState::Status::Default:
@@ -148,6 +156,13 @@ void Simulator::dataReady(QDataStream &inputStream)
     case RobotState::Status::HeightAdjust:
         qDebug() << "Simulator: Height adjusting";
         state.setHeight(receivedState.height());
+        state.setPressures(newPressures);
+        state.setOnlyHeightAdjust(true);
+        if (communication->isConnected())
+        {
+            communication->send(state);
+        }
+        state.setOnlyHeightAdjust(false);
         state.setStatus(RobotState::Status::Default);
         break;
     case RobotState::Status::SelfTest:
@@ -173,33 +188,40 @@ void Simulator::startSelfTest(){
 }
 
 void Simulator::selfTestTick(){
-    if(selfTestProcessCounter < 23){
-        qDebug() << "Simulator: Önteszt magasság emelés";
+    if(selfTestProcessCounter < 23){ // 23
+        qDebug() << "Simulator: Önteszt magasság emelés és gyorsítás";
         state.setStatus(RobotState::Status::SelfTest);
         communication->send(state);
         state.setHeight(state.height()+1);
         state.setV(state.v()+0.5);
         selfTestTimer.setInterval(1000.0F-selfTestProcessCounter*20);
     }
-    else if (selfTestProcessCounter <= 47){
-        qDebug() << "Simulator: Önteszt magasság csökkentés";
+    else if (selfTestProcessCounter <= 47){ // 47
+        qDebug() << "Simulator: Önteszt magasság csökkentés és lassítás";
         state.setStatus(RobotState::Status::SelfTest);
         communication->send(state);
         state.setHeight(state.height()-1);
-        state.setV(state.v()-0.5);
+        if(state.v() >= 0.5){
+            state.setV(state.v()-0.5);
+        }
         selfTestTimer.setInterval(520+selfTestProcessCounter*5);
 
 
     }
     else{
         state.setHeight(12);
+        QList<double> resetPressures({4,4});
+        state.setPressures(resetPressures);
         state.setStatus(RobotState::Status::Default);
         communication->send(state);
         qDebug() << "Simulator: Önteszt vége";
         selfTestTimer.stop();
+        selfTestProcessCounter = 0;
 
     }
-    state.setLight( state.v()==10.0F ? 1.0F : 0.0F );
+    QList<double> newPressures = {4* state.height() * 0.093, 4 * state.height() * 0.083};
+    state.setPressures(newPressures);
+    state.setLight( state.v() >= 10.0F ? 1.0F : 0.0F );
     state.setTimestamp(state.timestamp() + dt);
     state.setX(state.x() + state.v()*dt);
     state.setV(state.v());

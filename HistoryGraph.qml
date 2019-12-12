@@ -6,6 +6,7 @@ Canvas {
     property var graphVelocities;
     property var graphAccelerations;
     property var graphCarHeights;
+    property var carCurrentHeight;
 
 
     // A Canvas Paint signalja esetén újra kell rajzolni a grafikont.
@@ -17,7 +18,7 @@ Canvas {
         context.fillStyle = "white"
         context.fillRect(0, 0, width, height);
 
-        switch(graphCarHeights[graphCarHeights.length-1]) {
+        switch(carCurrentHeight) {
           case 24:
             context.drawImage(image1, width*0.8, height*0.1, width*0.2, height*0.7);
           break;

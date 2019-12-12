@@ -38,6 +38,9 @@ public:
 
     /** A paraméterül kapott állapot egy másolatát a history végéhez fűzi és aktuálissá teszi. */
     void Add(const RobotState& state);
+    void AddOnlyForHeight(const RobotState& state);
+
+
 
     /** \addtogroup Tárolók a követlen megjelenítéshez.
      * Csak a legutolsó shownStateNumber számú elemet tárolják.
@@ -48,6 +51,8 @@ public:
     QList<int> graphVelocities;
     QList<int> graphAccelerations;
     QList<int> graphCarHeights;
+    QList<double> actualPressures = QList<double>() << 4 << 4;
+    int carCurrentHeight = 12;
     /** @}*/
 
     /** A megjelenítendő állapotok száma. */
@@ -56,6 +61,7 @@ public:
 signals:
     /** Add() után kiadott signal. */
     void historyChanged();
+    void heightChanged();
 };
 
 #endif // ROBOTSTATEHISTORY_H

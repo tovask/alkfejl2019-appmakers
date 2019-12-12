@@ -54,7 +54,7 @@ protected:
     /** A szimulátor pillanatnyi állapota. */
     RobotState state;
 
-    int selfTestProcessCounter;
+    int selfTestProcessCounter = 0;
 
     void startSelfTest();
 protected slots:

@@ -16,6 +16,7 @@ StvApplication::StvApplication(int &argc, char *argv[])
     //  a C++ oldalról származó változók. (Különben referencia hibákat kapnánk a QML oldalon
     //  egészen addig, amíg az első üzenet meg nem jönne a szimulátortól.
     handler.historyChanged();
+    handler.heightChanged();
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

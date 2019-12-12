@@ -49,9 +49,10 @@ public:
      * @param v Sebesség
      * @param light Robot lámpájának állapota
      * @param height Magasság
+     * @param pressures Légrugók nyomása
      */
     RobotState(Status status, qint64 timestamp,
-        float x, float v, float a, qint8 light, qint32 height);
+        float x, float v, qint8 light, qint32 height, QList<double> pressures, bool onlyHeightAdjust);
 
     ~RobotState() = default;
 
@@ -87,6 +88,16 @@ public:
     qint32 height() const { return _height; }
     void setHeight(qint32 height) { _height = height; }
 
+    /** Csak magasság állítás bool */
+    Q_PROPERTY(bool onlyHeightAdjust READ onlyHeightAdjust WRITE setOnlyHeightAdjust MEMBER _onlyHeightAdjust NOTIFY onlyHeightChaned)
+    bool onlyHeightAdjust() const { return _onlyHeightAdjust; }
+    void setOnlyHeightAdjust(bool onlyHeightAdjust) { _onlyHeightAdjust = onlyHeightAdjust; }
+
+    /** Légrugók nyomása (bar) */
+    Q_PROPERTY(QList<double> pressures READ pressures WRITE setPressures MEMBER _pressures NOTIFY pressuresChanged)
+    QList<double> pressures() const { return _pressures; }
+    void setPressures(QList<double> pressures) { _pressures = pressures; }
+
     /** Az aktuális állapot QStringként. */
     // In QML, it will be accessible as model.statusName
     Q_PROPERTY(QString statusName READ getStatusName NOTIFY statusChanged)
@@ -96,6 +107,7 @@ public:
 
     /** Beolvassa az objektumot a streamből. */
     void ReadFrom(QDataStream& stream);
+
 
     /** Másolat készítés. */
     // Erre azért van szükség, mert a QObject-ek másolására speciális szabályok vonatkoznak.
@@ -114,6 +126,8 @@ signals:
     void vChanged();
     void lightChanged();
     void heightChanged();
+    void pressuresChanged();
+    void onlyHeightChaned();
 
 private:
     Status _status;
@@ -122,6 +136,8 @@ private:
     float _v;       /** Sebesség (m/s) */
     qint8 _light;   /** Lámpa (on/off) */
     qint32 _height; /** Magasság (m) */
+    QList<double> _pressures = QList<double>() << 4 << 4; /** Légrugók nyomása, első/hátsó tengely (bar) */
+    bool _onlyHeightAdjust = false; /** Ha csak magasságot állítunk akkor true */
 
     /** Az állapotok és szöveges verziójuk közti megfeleltetés.
      * A getStatusName() használja. */

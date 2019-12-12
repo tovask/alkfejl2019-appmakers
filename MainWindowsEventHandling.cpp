@@ -11,6 +11,8 @@ MainWindowsEventHandling::MainWindowsEventHandling(
     : robot(robot), qmlContext(qmlContext), history(history)
 {
     QObject::connect(&history, SIGNAL(historyChanged()), this, SLOT(historyChanged()));
+    QObject::connect(&history, SIGNAL(heightChanged()), this, SLOT(heightChanged()));
+
 }
 
 void MainWindowsEventHandling::accelerateCommand()
@@ -49,11 +51,20 @@ void MainWindowsEventHandling::historyChanged()
     qmlContext.setContextProperty(QStringLiteral("historyGraphVelocity"), QVariant::fromValue(history.graphVelocities));
     qmlContext.setContextProperty(QStringLiteral("historyGraphAcceleration"), QVariant::fromValue(history.graphAccelerations));
     qmlContext.setContextProperty(QStringLiteral("historyCarHeight"), QVariant::fromValue(history.graphCarHeights));
+    qmlContext.setContextProperty(QStringLiteral("historyCarCurrentHeight"), QVariant::fromValue(history.carCurrentHeight));
 
 
 
     // Jelzünk a QML controloknak, hogy újrarajzolhatják magukat, beállítottuk az új értékeket.
     emit historyContextUpdated();
+}
+
+void MainWindowsEventHandling::heightChanged()
+{
+    qmlContext.setContextProperty(QStringLiteral("currentState"), QVariant::fromValue(history.currentState));
+    qmlContext.setContextProperty(QStringLiteral("historyCarCurrentHeight"), QVariant::fromValue(history.carCurrentHeight));
+    emit heightContexUpdated();
+
 }
 
 QQuickItem* MainWindowsEventHandling::FindItemByName(QList<QObject*> nodes, const QString& name)
@@ -88,6 +99,8 @@ void MainWindowsEventHandling::ConnectQmlSignals(QObject *rootObject)
     if (historyGraph)
     {
         QObject::connect(this, SIGNAL(historyContextUpdated()), historyGraph, SLOT(requestPaint()));
+        QObject::connect(this, SIGNAL(heightContexUpdated()), historyGraph, SLOT(requestPaint()));
+
     }
     else
     {

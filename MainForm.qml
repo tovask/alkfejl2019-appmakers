@@ -47,6 +47,7 @@ Item {
             graphVelocities: historyGraphVelocity
             graphAccelerations: historyGraphAcceleration
             graphCarHeights: historyCarHeight
+            carCurrentHeight: historyCarCurrentHeight
         }
     }
 
@@ -76,6 +77,10 @@ Item {
             Text { text: " X:\t" + (currentState!=null ? currentState.x.toFixed(3) : "?") }
             Text { text: " V:\t" + (currentState!=null ? currentState.v.toFixed(3) : "?") }
             Text { text: " Lámpa:\t" + (currentState!=null ? currentState.light.toString() : "?") }
+            Text { text: " Első nyomás:\t" + (currentState!=null ? currentState.pressures[0].toFixed(3) + " bar" : "?") }
+            Text { text: " Hátsó nyomás:\t" + (currentState!=null ? currentState.pressures[1].toFixed(3) + " bar" : "?") }
+
+
         }
 
     }
@@ -155,6 +160,7 @@ Item {
                     anchors.leftMargin: 0
                     anchors.rightMargin: 0
                     onClicked: resetCommand()
+                    enabled: currentState.statusName !== "Önteszt"
                 }
 
                 Button {
@@ -165,6 +171,7 @@ Item {
                     anchors.rightMargin: 0
                     anchors.leftMargin: 0
                     onClicked: accelerateCommand()
+                    enabled: currentState.statusName !== "Önteszt"
                 }
             }
 
@@ -188,6 +195,7 @@ Item {
                     onValueChanged: {
                         carHeightCommand(value)
                     }
+                    enabled: currentState.statusName !== "Önteszt"
                 }
 
 
@@ -226,7 +234,7 @@ Item {
                     anchors.rightMargin: 0
                     anchors.leftMargin: 0
                     onClicked: stopCommand()
-                }
+                    enabled: currentState.statusName !== "Önteszt"                }
                 Button {
                     id: selfTestBtn
                     anchors.left: parent.left
@@ -235,6 +243,7 @@ Item {
                     anchors.rightMargin: 0
                     anchors.leftMargin: 0
                     onClicked: selfTestCommand()
+                    enabled: currentState.statusName !== "Önteszt"
                 }
             }
         }
@@ -254,6 +263,10 @@ Item {
             Text { text: " X: " + model.x.toFixed(3) }
             Text { text: " V: " + model.v.toFixed(3) }
             Text { text: " H: " + model.height }
+            Text { text: " E-T: " + model.pressures[0].toFixed(3) }
+            Text { text: " H-T: " + model.pressures[1].toFixed(3) }
+
+
         }
     }
 

@@ -65,6 +65,7 @@ public:
         sendBufferContent();
     }
 
+
 signals:
     /** Hibajelzés. */
     // Ezt majd minden protokoll megfelelően beköti.

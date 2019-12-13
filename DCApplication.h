@@ -17,17 +17,41 @@
 class DCApplication : public QApplication
 {
 public:
-    /** Konstruktor. Alapvető példányosítások és signal bekötések. */
+    /**
+     * @brief Konstruktor.
+     *
+     * Alapvető példányosítások és signal bekötések.
+     * @param argc
+     * @param argv
+     */
     DCApplication(int &argc, char *argv[]);
     ~DCApplication() = default;
 
 private:
+    /**  */
     std::unique_ptr<CommunicationTcpSocketServer> serverSocket;
+
+    /** A Simulator példánya. */
     Simulator simulator;
+
+    /** A QQmlApplicationEngine motorja az alkalmazásnak. */
     QQmlApplicationEngine engine;
+
+    /**
+     * @brief A RobotStateHistory példányát tárolja
+     *
+     * Ez tartalmazza a robot múltbeli állopotát,
+     * aminek segítségével a kirajzolás történik.
+     */
     RobotStateHistory history;
+
+    /** A kommunikációt lebonyolító CommunicationTcpSocketClient objektum. */
     CommunicationTcpSocketClient communication;
+
+    /** A proxy a robot felé a RobotProxy osztállyal. */
     RobotProxy robot;
+
+    /** MainWindowsEventHandling osztály tartalmazza az eseménykezelőket. */
     MainWindowsEventHandling handler;
 };
 

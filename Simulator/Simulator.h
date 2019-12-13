@@ -20,7 +20,7 @@ class Simulator : public QObject
 
 public:
     /** Konstruktor.
-     * @param port  A port, amin a létrehozott szerver hallgatózik.
+     * @param communication A Communication osztály egy példánya, amin a kommunikáció zajlik az alkalmazással.
     */
     explicit Simulator(Communication *communication);
     ~Simulator() = default;
@@ -41,12 +41,13 @@ protected:
 
     /** Időzítő a tick() metódus periodikus hívására. */
     QTimer timer;
+
+    /** Időzítő az önteszthez. A selfTestTick() metódust periodikusan hívja. */
     QTimer selfTestTimer;
 
 
     /** A periódus idő (másodpercben). */
     float dt;
-    qint32 tempHeight = 0;
 
     /** A timer aktuális tick ideje msben */
     float currentTimerTickInterval = 1000.0F;
@@ -54,15 +55,24 @@ protected:
     /** A szimulátor pillanatnyi állapota. */
     RobotState state;
 
+    /** Számláló az önteszt állapotának követéséhez */
     int selfTestProcessCounter = 0;
 
+    /** Elindítja az öntesztet */
     void startSelfTest();
+
 protected slots:
     /** A timer hívja meg, meghatározza a robot
      * állapotát a következő időpillanatban. */
     void tick();
+
+    /** A selfTestTimer hívja meg az önteszt folyamán. */
     void selfTestTick();
-    /** Új üzenet fogadását jelzi. */
+
+    /**
+     * @brief Új üzenet fogadását jelzi.
+     * @param inputStream A csatorna, amiben az üzenetek jöttek.
+     */
     void dataReady(QDataStream& inputStream);
 };
 

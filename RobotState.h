@@ -32,7 +32,10 @@ public:
         /** Gyorsítási parancs a robotnak. A gyorsítás mértékét a robot
          * átveszi a RobotState::a tulajdonságból. */
         Accelerate = 3,
+        /** Önteszt. A robot működésének tesztelése.
+         * A parancsok letiltásra kerülnek alatta. */
         SelfTest = 4,
+        /** Magasság állítása parancs a robotnak. */
         HeightAdjust = 5
     };
 
@@ -50,6 +53,7 @@ public:
      * @param light Robot lámpájának állapota
      * @param height Magasság
      * @param pressures Légrugók nyomása
+     * @param onlyHeightAdjust Csak a magasság változott
      */
     RobotState(Status status, qint64 timestamp,
         float x, float v, qint8 light, qint32 height, QList<double> pressures, bool onlyHeightAdjust);
@@ -102,36 +106,47 @@ public:
     // In QML, it will be accessible as model.statusName
     Q_PROPERTY(QString statusName READ getStatusName NOTIFY statusChanged)
 
-    /** Sorosítja az objektumot a megadott streambe. */
+    /**
+     * @brief Sorosítja az objektumot a megadott streambe.
+     * @param stream Az írandó adatfolyam.
+     */
     void WriteTo(QDataStream& stream) const;
 
-    /** Beolvassa az objektumot a streamből. */
+    /**
+     * @brief Beolvassa az objektumot a streamből.
+     * @param stream Az olvasandó adatfolyam
+     */
     void ReadFrom(QDataStream& stream);
 
-
-    /** Másolat készítés. */
-    // Erre azért van szükség, mert a QObject-ek másolására speciális szabályok vonatkoznak.
+    /**
+     * @brief Másolat készítés.
+     *
+     * Erre azért van szükség, mert a QObject-ek másolására speciális szabályok vonatkoznak.
+     * @param other A másolandó RobotState
+     */
     void CopyFrom(const RobotState& other);
 
 
 
-    /** Olvaható formában visszaadja az állapotot. */
+    /**
+     * @brief Olvaható formában visszaadja az állapotot.
+     * @return Az állapot neve
+     */
     QString getStatusName() const;
 
 signals:
-    // Ezeket a signalokat most nem használjuk */
-    void statusChanged();
-    void timestampChanged();
-    void xChanged();
-    void vChanged();
-    void lightChanged();
-    void heightChanged();
-    void pressuresChanged();
-    void onlyHeightChaned();
+    void statusChanged(); /** Állapot változása. (Nincs használva) */
+    void timestampChanged(); /** Időbélyeg változása. (Nincs használva) */
+    void xChanged(); /** Pozíció változása. (Nincs használva) */
+    void vChanged(); /** Sebesség változása. (Nincs használva) */
+    void lightChanged(); /** Világítás változása. (Nincs használva) */
+    void heightChanged(); /** Magasság változása. */
+    void pressuresChanged(); /** Nyomás változása. (Nincs használva) */
+    void onlyHeightChaned(); /** Csak a magasság változása. (Nincs használva) */
 
 private:
-    Status _status;
-    qint64 _timestamp;
+    Status _status; /** Állapot (vagy parancs) */
+    qint64 _timestamp; /** Időbélyeg (s) */
     float _x;       /** Pozíció (m) */
     float _v;       /** Sebesség (m/s) */
     qint8 _light;   /** Lámpa (on/off) */

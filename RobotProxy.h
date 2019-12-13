@@ -44,7 +44,15 @@ public:
      */
     void stop();
 
+    /**
+     * @brief Önteszt futtatása.
+     */
     void selfTest();
+
+    /**
+     * @brief A magasság állítása.
+     * @param height A kívánt magasság.
+     */
     void changeHeightTo(int height);
 
 public slots:

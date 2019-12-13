@@ -54,9 +54,27 @@ public slots:
      * kiváltja a historyContextUpdated() signalt.
     */
     void historyChanged();
+
+    /**
+     * @brief Jelzi, hogy változott a magasság.
+     */
     void heightChanged();
 
+    /**
+     * @brief Az önteszt parancs
+     *
+     * A felületen a gomb megnyomására hívódik meg,
+     * és elindítja az öntesztet, közben letiltja a
+     * többi parancsot.
+     *
+     * @warning Az önteszt alatt az összes többi parancs letiltásra kerül!
+     */
     void selfTestCommand();
+
+    /**
+     * @brief A magasságot állító csúszka eseménykezelője.
+     * @param height A csúszkával beállított érték.
+     */
     void carHeightCommand(int height);
 
 signals:
@@ -64,6 +82,13 @@ signals:
      * Ilyenkor az érintett QML elemek (a grafikon) újrarajzolják magukat.
      */
     void historyContextUpdated();
+
+    /**
+     * @brief Jelzi, hogy változott a magasság.
+     *
+     * Álló helyzetben is lehet magasságot módosítani.
+     * A grafikon újrarajzolódik ilyenkor.
+     */
     void heightContexUpdated();
 
 private:

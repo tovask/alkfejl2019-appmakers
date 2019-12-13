@@ -21,10 +21,16 @@ public:
     Communication();
     virtual ~Communication();
 
-    /** Csatlakozás egy eszközhöz (Pl. QTcpSocket), amit használni fog. */
+    /**
+     * @brief Csatlakozás egy eszközhöz (Pl. QTcpSocket), amit használni fog.
+     * @param device
+     */
     void connectToDevice(QIODevice *device);
 
-    /** Visszaadja, hogy van-e nyitott kapcsolat. */
+    /**
+     * @brief Visszaadja, hogy van-e nyitott kapcsolat.
+     * @return van-e nyitott kapcsolat.
+     */
     virtual bool isConnected() const = 0;
 
     /** Visszaad egy pointert az adatfogadási folyamra. */

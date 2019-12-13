@@ -36,8 +36,21 @@ public:
     /** Ez a tároló tárolja ténylegesen az állapotokat. (Övé az ownership.) */
     std::vector<std::unique_ptr<RobotState>> container;
 
-    /** A paraméterül kapott állapot egy másolatát a history végéhez fűzi és aktuálissá teszi. */
+    /**
+     * @brief Új állapot eltárolása.
+     *
+     * A paraméterül kapott állapot egy másolatát a history végéhez fűzi és aktuálissá teszi.
+     * @param state Az új RobotState
+     */
     void Add(const RobotState& state);
+
+    /**
+     * @brief Új magasság eltárolása.
+     *
+     * A paraméterül kapott állapotból frissíti a magasságot a historyban, a többit változatlanúl hagyja,
+     *  és aktuálissá teszi ezt az historyt.
+     * @param state Az új RobotState
+     */
     void AddOnlyForHeight(const RobotState& state);
 
 
@@ -47,13 +60,21 @@ public:
      * Az Add() frissíti.
      *  @{
      */
+
+    /** Az időbélyeg múltbeli értékei */
     QList<int> graphTimestamps;
+    /** A sebesség múltbeli értékei */
     QList<int> graphVelocities;
+    /** A gyorsulás múltbeli értékei */
     QList<int> graphAccelerations;
+    /** A magasság múltbeli értékei. */
     QList<int> graphCarHeights;
+    /** A nyomás múltbeli értékei */
     QList<double> actualPressures = QList<double>() << 4 << 4;
+    /** Az aktuális magasság */
     int carCurrentHeight = 12;
-    /** @}*/
+
+    /** @} */
 
     /** A megjelenítendő állapotok száma. */
     const int shownStateNumber = 200;
@@ -61,6 +82,7 @@ public:
 signals:
     /** Add() után kiadott signal. */
     void historyChanged();
+    /** AddOnlyForHeight() után kiadott signal. */
     void heightChanged();
 };
 

@@ -95,14 +95,10 @@ private:
     /** A használt robot proxy. */
     RobotProxy& robot;
 
-    /** \addtogroup Hivatkozások adatkötéshez
-     *  @{
-     */
     /** QML context a robot adatok frissítéséhez. */
     QQmlContext &qmlContext;
     /** A history objektum. */
     RobotStateHistory &history;
-    /** @}*/
 
     /** Segédfüggvény QML elemek rekurzív megkeresésére.
      * @param rootObject A QML gyökérelem, amivel a keresést kezdjük.

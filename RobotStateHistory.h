@@ -54,13 +54,6 @@ public:
     void AddOnlyForHeight(const RobotState& state);
 
 
-
-    /** \addtogroup Tárolók a követlen megjelenítéshez.
-     * Csak a legutolsó shownStateNumber számú elemet tárolják.
-     * Az Add() frissíti.
-     *  @{
-     */
-
     /** Az időbélyeg múltbeli értékei */
     QList<int> graphTimestamps;
     /** A sebesség múltbeli értékei */
@@ -73,8 +66,6 @@ public:
     QList<double> actualPressures = QList<double>() << 4 << 4;
     /** Az aktuális magasság */
     int carCurrentHeight = 12;
-
-    /** @} */
 
     /** A megjelenítendő állapotok száma. */
     const int shownStateNumber = 200;

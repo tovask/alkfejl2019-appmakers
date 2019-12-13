@@ -92,7 +92,8 @@ Canvas {
               context.drawImage(image24, width*0.8, height*0.1, width*0.2, height*0.7);
             break;
           default:
-            // code block
+              context.drawImage(image13, width*0.8, height*0.1, width*0.2, height*0.7);
+            break;
         }
 
 

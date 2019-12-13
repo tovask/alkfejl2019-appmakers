@@ -1,6 +1,6 @@
 #pragma once
-#ifndef STVAPPLICATION_H
-#define STVAPPLICATION_H
+#ifndef DCAPPLICATION_H
+#define DCAPPLICATION_H
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include "Simulator/Simulator.h"
@@ -14,12 +14,12 @@
  *
  * A konstruktor elvégzi az alapvető példányosításokat és a signalok összekapcsolását.
  */
-class StvApplication : public QApplication
+class DCApplication : public QApplication
 {
 public:
     /** Konstruktor. Alapvető példányosítások és signal bekötések. */
-    StvApplication(int &argc, char *argv[]);
-    ~StvApplication() = default;
+    DCApplication(int &argc, char *argv[]);
+    ~DCApplication() = default;
 
 private:
     std::unique_ptr<CommunicationTcpSocketServer> serverSocket;
@@ -31,4 +31,4 @@ private:
     MainWindowsEventHandling handler;
 };
 
-#endif // STVAPPLICATION_H
+#endif // DCAPPLICATION_H

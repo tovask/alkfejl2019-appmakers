@@ -1,9 +1,9 @@
 #include <QDebug>
 #include <QQmlContext>
-#include "StvApplication.h"
+#include "DCApplication.h"
 
 int main(int argc, char *argv[])
 {
-    StvApplication app(argc, argv);
+    DCApplication app(argc, argv);
     return app.exec();
 }

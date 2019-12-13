@@ -11,7 +11,7 @@ ApplicationWindow {
     visible: true
 
     // Signalok, melyeket a C++ oldalon fogunk C++ slotokhoz kötni
-    //  az StvApplication osztály konstruktorában.
+    //  az DCApplication osztály konstruktorában.
     signal resetCommandCpp()
     signal accelerateCommandCpp()
     signal stopCommandCpp()

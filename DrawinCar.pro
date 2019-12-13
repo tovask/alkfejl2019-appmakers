@@ -17,7 +17,7 @@ SOURCES += main.cpp \
     Communication/CommunicationTcpSocketClient.cpp \
     Simulator/Simulator.cpp \
     Communication/CommunicationSerialPort.cpp \
-    StvApplication.cpp
+    DCApplication.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,7 +38,7 @@ HEADERS += \
     Communication/CommunicationTcpSocketClient.h \
     Simulator/Simulator.h \
     Communication/CommunicationSerialPort.h \
-    StvApplication.h
+    DCApplication.h
 
 DISTFILES += \
     images/8-512.png

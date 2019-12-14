@@ -16,11 +16,7 @@
 
 @section Architektura Architektúra áttekintés
 
-A Drawing Car (DC) alkalmazás három fő részből áll:
-
-   * Robot reprezentáció és szimuláció: ez felelős a robot állapotának követéséért, valamint a korábbi állapotok eltárolásáért a későbbi megjelenítéshez.
-   * Felhasználói felület: QML alapú megjelenítése a vezérlő nyomógomboknak és csúszkának, valamint az aktuális és korábbi állapotoknak.
-   * Kommunikáció: TCP/IP alapú kommunikáció a szimulációval. Kialakítása miatt könnyű az átállás más, péládul Bluetooth alapú kommunikációra. A kommunikációs adatcsomagok egyetlen osztály példányait küldik mindkét irányba (RobotState), ebben továbbítódnak a konkrét állapotok és a parancsok is.
+A Drawing Car (DC) alkalmazás három részből tevődik össze. Az első részben a jármű ábrázolása és annak szimulációja történik, ahol a jármű állapotai vannak lekövetve, továbbá ezeket az állapotokat eltárolja, hogy a későbbiekben felhasználható legyen a megjelenítés során. A második rész a felhasználói felület, itt egy QML alapú megjelenítés teszi lehetővé különböző nyomógombok és csúszkák, illetve a jármű aktuális és eltárolt állapotainak megvalósítását. A harmadik rész a kommunikáció, ahol a szimulációval való TCP/IP kommunikáció valósul meg. Az adatcsomagok egyetlen osztály példányait küldik mindkét irányba, amiben a pontos állapotok és a parancsok kerülnek továbbküldésére.
 
 @section DCApplication DCApplication: az alkalmazás osztály
 

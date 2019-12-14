@@ -107,7 +107,7 @@ Canvas {
         //drawDataset(context, graphVelocities, "rgba(110,220,110,1)", 5.0);
         //drawDataset(context, graphAccelerations, "rgba(220,110,110,1)", 5.0);
         drawTrack(context, graphCarHeights, "rgba(220,110,220,1)", height/28);
-        drawDataset(context, graphCarHeights, "rgba(110,110,220,1)", height/60);
+        //drawDataset(context, graphCarHeights, "rgba(110,110,220,1)", height/60);
     } // onPaint vége
 
     // Vízszintes vonal berajzolása.
@@ -131,10 +131,18 @@ Canvas {
         context.fillStyle = "rgba(128,128,128,1)";
 
         // A vektoron végigmenve visszafele behúzzuk a nyomvonalat.
-        for(var i=datarow.length-1; i>=0; i--)
+        for(var i=datarow.length-1 -1; i>=0; i--)
         {
-            var strength = verticalScaler * (24 - datarow[i]);
-            context.fillRect(offsetX - 10 * (datarow.length-1 - i), offsetY - strength/2, 11, strength);
+            var strengthThis = verticalScaler * (24 - datarow[i]);
+            var strengthPrev = verticalScaler * (24 - datarow[i+1]);
+
+            context.beginPath();
+            context.moveTo(offsetX - 10 * (datarow.length-1 - i -1), offsetY - strengthPrev/2);
+            context.lineTo(offsetX - 10 * (datarow.length-1 - i) -1, offsetY - strengthThis/2);
+            context.lineTo(offsetX - 10 * (datarow.length-1 - i) -1, offsetY + strengthThis/2);
+            context.lineTo(offsetX - 10 * (datarow.length-1 - i -1), offsetY + strengthPrev/2);
+            context.closePath();
+            context.fill();
         }
     }
 

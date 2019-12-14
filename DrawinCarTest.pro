@@ -7,7 +7,7 @@
 CONFIG += c++11
 QMAKE_CXXFLAGS_CXX11    = -std=c++1y
 
-QT       += qml testlib
+QT       += testlib
 
 TARGET = tst_drawincartest
 CONFIG   += console

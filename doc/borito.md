@@ -13,14 +13,11 @@
 
 ### Bemutató videó URL-je (max. 5 perc): https://youtube.com/
 
+<br /><br /><br />
 
 @section Architektura Architektúra áttekintés
 
-A Drawing Car (DC) alkalmazás három fő részből áll:
-
-   * Robot reprezentáció és szimuláció: ez felelős a robot állapotának követéséért, valamint a korábbi állapotok eltárolásáért a későbbi megjelenítéshez.
-   * Felhasználói felület: QML alapú megjelenítése a vezérlő nyomógomboknak és csúszkának, valamint az aktuális és korábbi állapotoknak.
-   * Kommunikáció: TCP/IP alapú kommunikáció a szimulációval. Kialakítása miatt könnyű az átállás más, péládul Bluetooth alapú kommunikációra. A kommunikációs adatcsomagok egyetlen osztály példányait küldik mindkét irányba (RobotState), ebben továbbítódnak a konkrét állapotok és a parancsok is.
+A Drawing Car (DC) alkalmazás három részből tevődik össze. Az első részben a jármű ábrázolása és annak szimulációja történik, ahol a jármű állapotai vannak lekövetve, továbbá ezeket az állapotokat eltárolja, hogy a későbbiekben felhasználható legyen a megjelenítés során. A második rész a felhasználói felület, itt egy QML alapú megjelenítés teszi lehetővé különböző nyomógombok és csúszkák, illetve a jármű aktuális és eltárolt állapotainak megvalósítását. A harmadik rész a kommunikáció, ahol a szimulációval való TCP/IP kommunikáció valósul meg. Az adatcsomagok egyetlen osztály példányait küldik mindkét irányba, amiben a pontos állapotok és a parancsok kerülnek továbbküldésére.
 
 @section DCApplication DCApplication: az alkalmazás osztály
 
@@ -28,7 +25,7 @@ Az DCApplication osztály egyetlen példányát hozza létre a main() függvény
 
 Az DCApplication környezetét az alábbi osztálydiagram ábrázolja:
 
-![](diagrams/main_ClassDiagram.png)
+![Az alkalmazás átfogó képe](diagrams/class_main.png)
 
 A CommunicationTcpSocket példánya felelős minden kommunikációért a kliens irányból (a másik a szimulátor, mely a mélyén tartalmaz egy CommunicationTcpSocketServer objektumot).
 
@@ -44,7 +41,7 @@ A MainWindowsEventHandling felelős minden a felhasználói felületet érintő 
 
 A kommunikációért felelős osztályok egy általános kommunikációs interfészre (Communication osztály) épülnek. Ezt egészítik ki egy TCP/IP socket használatára, melynek két alesete van: a szerver és a kliens oldal. Ezt az alábbi osztály diagram szemlélteti:
 
-![](diagrams/communication_ClassDiagram.png)
+![A kommunikációs osztály](diagrams/class_communication.png)
 
 A Communication bizonyos műveleteket (isConnected, sendBufferContent) még csak absztrakt metódus formájában tartalmaz. A működési alapelve, hogy a send() metódussal bármilyen objektumot ki lehet írni a küldési bufferbe, amire értelmezett az operator<< QDataStream-re. A send() metúdus ennek segítségével sorosítja az üzenet objektumot, majd a sendBufferContent() metódussal elküldi azt. Ebből a folyamatból csak a sendBufferContent() az, ami függ a tényleges kommunikációs implementációtól, így az itt még absztrakt.
 
@@ -54,15 +51,21 @@ A CommunicationTcpSocket azzal egészíti ki az ősosztályát, hogy itt már ko
 
 A maradék két osztály, a kliens és a szerver gyakorlatilag csak a kapcsolat felépítésében és lebontásában különbözik, ezeknek az eltéréseknek a megvalósításával egészíti ki az ősosztályt.
 
+A kommunikáció lényegében így néz ki:
+
+![Az adatáramlás az alkalmazásban](diagrams/sequence_datastream.png)
+
+<br /><br />
+
 Az adatküldés szekvencia diagramja a következő:
 
-![Data sending sequence diagram](diagrams/send_SequenceDiagram.png)
+![Adat küldése](diagrams/send_SequenceDiagram.png)
 
 A küldéshez a Communication::send() elkéri a küldési adatstreamet (getSendStream() hívása), ebbe sorosítja a küldendő objektumot, majd a sendBufferContent() hívásával elküldi az adatokat.
 
 Adatok fogadása esetén az alábbi szekvencia diagram foglalja össze az eseményeket:
 
-![Data reception sequence diagram](diagrams/receive_SequenceDiagram.png)
+![Adat fogadása](diagrams/receive_SequenceDiagram.png)
 
 A kommunikáció mélyén lévő QTcpSocket a kliens dataReceived slotján kereszül jelzi, hogy érkezett adat. Mivel ilyenkor nem biztos, hogy a bufferben már egy egész üzenet benne van, így a kommunikáció csak akkor szól tovább a RobotProxynak (a dataReady signaljával), ha elegendő adat összegyűlt. (Ezt onnan tudja, hogy az adatcsomagok elején mindig átküldi, hogy hány bájtból áll a teljes adatcsomag.)
 
@@ -70,15 +73,13 @@ Amennyiben egy teljes adatcsomag átjött, a RobotProxy ezt kiolvassa (ehhez lé
 
 Végezetül még a kommunikációval kapcsolatos signal-slot hálózat képe az alábbi:
 
-![](diagrams/StvSignalMap_Comm.png)
-
 (Az ábrán négyzetekben láthatók az érintett objektumok, bal oldalukon a slotjaik, jobb oldalon pedig a signaljaik, valamint ezek kapcsolatai.)
 
 @section Robot Robot reprezentáció
 
 A robot reprezentációját az alábbi osztály diagram foglalja össze:
 
-![Robot class diagram](diagrams/robot_ClassDiagram.png)
+![Robot osztály](diagrams/robot_ClassDiagram.png)
 
 A RobotProxy felelős a kliens többi része felé a kapcsolattartásért.
 
@@ -90,17 +91,9 @@ A RobotStateHistory három formában is tárol RobotState-et:
   * currentState: egy pointer az aktuális állapotra. Mivel az ownership a containeré, ezért ha változik az aktuális állapot, ezt a pointert nyugodtan át lehet állítani bármi egyéb teendő nélkül.
   * stateList: egy pointer lista a container minden elemére. Erre azért van szükség, mert a QML megjelenítés csak ilyen listához tud adatkötést felépíteni, a unique_ptr vectorhoz nem. 
 
-A robot reprezentációért felelős osztályok signal-slot hálózata az alábbi:
-
-![](diagrams/StvSignalMap_App.png)
-
 @section Szimulator A szimulátor
 
 A szimulátort a Simulator osztály foglalja magába, mely belül egy CommunicationTcpSocketServer és egy RobotState objektumra támaszkodik. Minden bejövő üzenetet azonnal feldolgoz és egy QTimer segítségével periodikusan lefuttatja a szimulációt. Minden szimulációs lépés után elküldi az állapotát.
-
-A kapcsolódó signal-slot hálózat az alábbi:
-
-![](diagrams/StvSignalMap_Sim.png)
 
 @section UI Felhasználói felület
 
@@ -108,7 +101,7 @@ Az alkalmazás felhasználói felülete egy QML alapú GUI, melyben a QML oldal 
 
 A Reset nyomógomb megnyomása esetét mutatja be a következő szekvencia diagram:
 
-![Reset button sequence diagram](diagrams/reset_SequenceDiagram.png)
+![Reset gomb működése](diagrams/reset_SequenceDiagram.png)
 
 A QML oldalon a resetBtn nyomógomb eseményét a mainFormControl resetCommand slotja kapja meg (onResetCommand), mely tovább küldi azt a resetCommandCpp signal formájában, ami már a C++ oldalon van bekötve a MainWindowsEventHandling resetCommand slotjába. Az itteni eseménykezelő meghívja a robotProxy.reset() metódust, ami pedig összeállítja a reset parancsot a robot számára és elküldi a Communication send() metódusával.
 

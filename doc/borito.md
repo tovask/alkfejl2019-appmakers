@@ -11,7 +11,7 @@
 - 
 - 
 
-### Bemutató videó URL-je (max. 5 perc): https://youtube.com/
+### Bemutató videó URL-je (max. 5 perc): [https://youtu.be/](https://youtu.be/)
 
 <br /><br /><br />
 
